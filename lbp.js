@@ -37,6 +37,9 @@ function processLbFile(fileName, outputFile) {
         // Skip empty lines
         if(currentLine.length <= 0) continue;
         
+        // Skip comment lines
+        if(currentLine.startsWith("'")) continue;
+        
         // If line is a label
         if(currentLine.startsWith("@")) {
             // Add label to labels collection
@@ -48,6 +51,13 @@ function processLbFile(fileName, outputFile) {
             resultLine = `${lineNumber} ${inputLines[i]}`;
         }
         lineNumber += 10;
+        
+        // Clean off any .lb comments
+        if(resultLine.includes("'")) {
+            resultLine = resultLine.slice(0, resultLine.indexOf("'"));
+            resultLine = resultLine.trim();
+        }
+        console.log(resultLine);
         outputLines.push(resultLine);
     }
     

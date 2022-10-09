@@ -1,7 +1,9 @@
+' This is an example .lb program
+
 GOTO @PRINTBYE
-PRINT "HI"
+PRINT "HI" ' Prints HI
 END
 
 @PRINTBYE
-PRINT "BYE"
+PRINT "BYE" ' Prints BYE
 END
