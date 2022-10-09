@@ -34,6 +34,9 @@ function processLbFile(fileName, outputFile) {
         /** @type {String} */ let currentLine = inputLines[i].trim();
         /** @type {String} */ let resultLine; // Result
         
+        // Skip empty lines
+        if(currentLine.length <= 0) continue;
+        
         // If line is a label
         if(currentLine.startsWith("@")) {
             // Add label to labels collection
@@ -41,6 +44,7 @@ function processLbFile(fileName, outputFile) {
             labels[currentLine] = lineNumber + 10;
         }
         else {
+            // Do nothing special
             resultLine = `${lineNumber} ${inputLines[i]}`;
         }
         lineNumber += 10;
