@@ -36,8 +36,8 @@ console.log(`Delta: ${lineCount[1] - lineCount[0]}`);
 
 /**
  * Process the Labeled BASIC file.
- * @param {String} fileName 
- * @param {String} outputFile 
+ * @param {String} fileName
+ * @param {String} outputFile
  * @returns {Number[]}
  */
 function processLbFile(fileName, outputFile) {
@@ -46,18 +46,18 @@ function processLbFile(fileName, outputFile) {
     /** @type {String[]} */ let outputLines = [];
     /** @type {Object<String, Number>} */ let labels = {};
     /** @type {Number} */ let lineNumber = lineIncrementSize;
-    
+
     // For each line
     for(let i = 0; i < inputLines.length; i++) {
         /** @type {String} */ let currentLine = inputLines[i].trim();
         /** @type {String} */ let resultLine; // Result
-        
+
         // Skip empty lines
         if(currentLine.length <= 0) continue;
-        
+
         // Skip comment lines
         if(currentLine.startsWith("'")) continue;
-        
+
         // If line is a label
         if(currentLine.startsWith("@")) {
             // Add label to labels collection
@@ -69,7 +69,7 @@ function processLbFile(fileName, outputFile) {
             resultLine = `${lineNumber} ${currentLine}`;
         }
         lineNumber += lineIncrementSize;
-        
+
         // Clean off any .lb comments
         if(resultLine.includes("'")) {
             resultLine = resultLine.slice(0, resultLine.indexOf("'"));
@@ -77,10 +77,10 @@ function processLbFile(fileName, outputFile) {
         }
         outputLines.push(resultLine);
     }
-    
+
     // Get list of labels
     let labelEntries = Object.keys(labels);
-    
+
     // Sort by longest label to shortest label.
     // They must be sorted because otherwise short label names could fit
     // into longer label names when finding/replacing `@LABEL` with `@LABEL_LONG`.
@@ -90,16 +90,16 @@ function processLbFile(fileName, outputFile) {
     labelEntries = labelEntries.sort((a, b) => {
         return b.length - a.length;
     });
-    
+
     // For each label entry
     for(let i = 0; i <= labelEntries.length; i++) {
         let labelName = labelEntries[i];
         let labelLineNumber = labels[labelName];
-        
+
         // For each line
         for(let j = 0; j < outputLines.length; j++) {
             /** @type {String} */ let line = outputLines[j];
-            
+
             // Replace @LABEL with line number if it's not the label definition line
             if(!line.includes(" REM @") && outputLines[j].includes(labelName)) {
                 line = outputLines[j].replace(labelName, labelLineNumber);
@@ -107,9 +107,9 @@ function processLbFile(fileName, outputFile) {
             }
         }
     }
-    
+
     // Write file
     fs.writeFileSync(outputFile, outputLines.join("\n"));
-    
+
     return [inputLines.length, outputLines.length];
 }
